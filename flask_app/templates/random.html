@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Random Truck - SF Food Trucks{% endblock %}
+
+{% block extra_css %}
+<style>
+    .random-container {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .lucky-btn {
+        background: #fded39;
+        color: #1a1a1a;
+        padding: 1.5rem 3rem;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 2rem 0;
+        box-shadow: 0 5px 20px rgba(253, 237, 57, 0.3);
+    }
+
+    .lucky-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(253, 237, 57, 0.5);
+    }
+
+    .truck-display {
+        background: #2a2a2a;
+        border: 2px solid #fded39;
+        border-radius: 20px;
+        padding: 3rem;
+        margin-top: 2rem;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .truck-name {
+        font-size: 2.5rem;
+        color: #fded39;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+    }
+
+    .truck-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .food-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .food-tag {
+        background: #1a1a1a;
+        border: 1px solid #fded39;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #fded39;
+        font-size: 0.9rem;
+        text-transform: capitalize;
+    }
+
+    .detail-section {
+        background: #1a1a1a;
+        border: 1px solid #444;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        text-align: left;
+    }
+
+    .detail-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        align-items: flex-start;
+    }
+
+    .detail-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .detail-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .detail-content {
+        flex: 1;
+    }
+
+    .detail-label {
+        color: #aaa;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        color: #fded39;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="content-card">
+        <div class="random-container">
+            <h1>🎲 Feeling Lucky?</h1>
+            <p>Can't decide what to eat? Let us pick a random food truck for you!</p>
+
+            <button class="lucky-btn" onclick="location.reload()">
+                🎰 Get Random Truck
+            </button>
+
+            {% if error %}
+                <div style="background: #2a2a2a; border: 2px solid #ef4444; border-radius: 10px; padding: 2rem; margin-top: 2rem;">
+                    <h2 style="color: #ef4444;">⚠️ Error</h2>
+                    <p style="color: #aaa;">{{ data.msg }}</p>
+                </div>
+            {% elif data %}
+                <div class="truck-display">
+                    <div class="truck-icon">🚚</div>
+                    <h2 class="truck-name">{{ data.truck.name }}</h2>
+
+                    <div class="food-items">
+                        {% for item in data.truck.fooditems %}
+                            <span class="food-tag">{{ item }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="detail-row">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Address</div>
+                                <div class="detail-value">{{ data.truck.address }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">🕐</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Hours</div>
+                                <div class="detail-value">{{ data.truck.hours }}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-icon">📅</div>
+                            <div class="detail-content">
+                                <div class="detail-label">Schedule</div>
+                                <div class="detail-value">{{ data.truck.schedule }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

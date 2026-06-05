@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}About - SF Food Trucks{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="content-card">
+        <h1>About SF Food Trucks 🌮</h1>
+        
+        <p>Welcome to San Francisco's premier food truck finder! Our mission is to connect hungry San Franciscans with the best mobile cuisine in the city.</p>
+
+        <h2>What We Do</h2>
+        <p>We provide a real-time interactive map showing the locations of food trucks throughout San Francisco. Whether you're craving tacos, burgers, or something more exotic, we'll help you find it.</p>
+
+        <h2>Our Story</h2>
+        <p>Founded in 2024, SF Food Trucks was created to solve a simple problem: finding great food on wheels shouldn't be hard. We aggregate data from the city's food truck permits and present it in an easy-to-use format.</p>
+
+        <h2>Features</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+            <div style="padding: 1.5rem; background: #2a2a2a; border: 1px solid #fded39; border-radius: 10px;">
+                <h3 style="color: #fded39; margin-bottom: 0.5rem;">📍 Real-time Locations</h3>
+                <p style="margin: 0;">Find trucks near you instantly</p>
+            </div>
+            <div style="padding: 1.5rem; background: #2a2a2a; border: 1px solid #fded39; border-radius: 10px;">
+                <h3 style="color: #fded39; margin-bottom: 0.5rem;">🍔 Menu Information</h3>
+                <p style="margin: 0;">See what each truck serves</p>
+            </div>
+            <div style="padding: 1.5rem; background: #2a2a2a; border: 1px solid #fded39; border-radius: 10px;">
+                <h3 style="color: #fded39; margin-bottom: 0.5rem;">🗺️ Interactive Map</h3>
+                <p style="margin: 0;">Easy-to-use mapping interface</p>
+            </div>
+        </div>
+
+        <h2>Data Source</h2>
+        <p>Our data comes from San Francisco's open data portal and is updated regularly to ensure accuracy.</p>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: locust-config
+data:
+  locust: |
+    import random
+    from locust import HttpUser, task, between
+
+    class FoodTruckUser(HttpUser):
+        wait_time = between(0.1, 0.3)
+
+        @task(5)
+        def search(self):
+            query = random.choice(["tacos", "pizza", "burger", "coffee", "sushi"])
+            self.client.get(f"/search?q={query}&format=json", name="search")
+
+        @task(6)
+        def filter(self):
+            cuisine = random.choice([
+                "tacos",
+                "burgers",
+                "mediterranean",
+                "sandwiches"
+            ])
+            self.client.get(f"/filter?cuisine={cuisine}&format=json", name="filter")
+
+        @task(3)
+        def menu(self):
+            self.client.get("/menu?format=json", name="menu")
+
+        @task(2)
+        def random_truck(self):
+            self.client.get("/random?format=json", name="random")
+
+        @task(2)
+        def stats(self):
+            self.client.get("/stats?format=json", name="stats")
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust
+spec:
+  selector:
+    matchLabels:
+      app: locust
+  template:
+    metadata:
+      labels:
+        app: locust
+    spec:
+      containers:
+      - image: locustio/locust
+        command: ["/bin/sh"]
+        args: ["-c", "locust -f /mnt/locust/locustfile.py --headless -H http://web:5000 -u 10 -r 1"]
+        imagePullPolicy: ""
+        name: locust
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "252Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8089
+        volumeMounts:
+        - name: locust-volume
+          mountPath: /mnt/locust
+      volumes:
+        - name: locust-volume
+          configMap:
+            name: locust-config
+            items:
+            - key: "locust"
+              path: "locustfile.py"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust
+spec:
+  ports:
+  - name: locust
+    port: 8089
+    targetPort: 8089
+  selector:
+    app: locust

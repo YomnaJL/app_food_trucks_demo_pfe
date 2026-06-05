@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Filter Trucks - SF Food Trucks{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-box {
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        background: #2a2a2a;
+        border: 2px solid #444;
+        border-radius: 10px;
+        color: #aaa;
+        font-size: 1rem;
+        font-family: 'Titillium Web', sans-serif;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #fded39;
+    }
+
+    .search-btn {
+        background: #fded39;
+        color: #1a1a1a;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .search-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .cuisine-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .cuisine-tag {
+        background: #2a2a2a;
+        border: 1px solid #fded39;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: #fded39;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+
+    .cuisine-tag:hover {
+        background: #fded39;
+        color: #1a1a1a;
+        transform: translateY(-2px);
+    }
+
+    .results-header {
+        background: #2a2a2a;
+        border: 1px solid #fded39;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: center;
+    }
+
+    .truck-list {
+        display: grid;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .truck-card {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 10px;
+        padding: 2rem;
+        transition: border-color 0.3s;
+    }
+
+    .truck-card:hover {
+        border-color: #fded39;
+    }
+
+    .truck-card h3 {
+        color: #fded39;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .locations-list {
+        margin-top: 1rem;
+        padding-left: 1rem;
+    }
+
+    .location-item {
+        background: #1a1a1a;
+        border-left: 3px solid #fded39;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .location-item:last-child {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="content-card">
+        <h1>🔍 Filter Food Trucks</h1>
+        <p>Search for trucks by cuisine type or food item.</p>
+
+        <div class="search-box">
+            <form class="search-form" action="/filter" method="get">
+                <input 
+                    type="text" 
+                    name="cuisine" 
+                    class="search-input" 
+                    placeholder="e.g., tacos, burger, pizza..." 
+                    value="{{ data.cuisine if data.cuisine else '' }}"
+                    required
+                >
+                <button type="submit" class="search-btn">🔍 Search</button>
+            </form>
+        </div>
+
+        <div class="cuisine-tags">
+            <a href="/filter?cuisine=tacos" class="cuisine-tag">🌮 Tacos</a>
+            <a href="/filter?cuisine=burger" class="cuisine-tag">🍔 Burgers</a>
+            <a href="/filter?cuisine=pizza" class="cuisine-tag">🍕 Pizza</a>
+            <a href="/filter?cuisine=sandwich" class="cuisine-tag">🥪 Sandwiches</a>
+            <a href="/filter?cuisine=coffee" class="cuisine-tag">☕ Coffee</a>
+            <a href="/filter?cuisine=ice cream" class="cuisine-tag">🍦 Ice Cream</a>
+            <a href="/filter?cuisine=hot dog" class="cuisine-tag">🌭 Hot Dogs</a>
+            <a href="/filter?cuisine=noodles" class="cuisine-tag">🍜 Noodles</a>
+        </div>
+
+        {% if error %}
+            <div style="background: #2a2a2a; border: 2px solid #ef4444; border-radius: 10px; padding: 2rem; text-align: center; margin-top: 2rem;">
+                <h2 style="color: #ef4444;">⚠️ Error</h2>
+                <p style="color: #aaa;">{{ data.msg }}</p>
+            </div>
+        {% elif data.trucks %}
+            <div class="results-header">
+                <h2 style="color: #fded39; margin: 0;">Found {{ data.count }} truck{{ 's' if data.count != 1 else '' }} serving "{{ data.cuisine }}"</h2>
+            </div>
+
+            <div class="truck-list">
+                {% for truck in data.trucks %}
+                    <div class="truck-card">
+                        <h3>🚚 {{ truck.name }}</h3>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <strong style="color: #aaa;">Menu Items:</strong>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                {% for item in truck.fooditems %}
+                                    <span style="background: #1a1a1a; border: 1px solid #fded39; padding: 0.25rem 0.75rem; border-radius: 15px; color: #fded39; font-size: 0.85rem;">{{ item }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <strong style="color: #aaa;">Locations ({{ truck.branches|length }}):</strong>
+                            <div class="locations-list">
+                                {% for branch in truck.branches %}
+                                    <div class="location-item">
+                                        <div style="color: #fded39; font-weight: 600; margin-bottom: 0.5rem;">📍 {{ branch.address }}</div>
+                                        <div style="color: #aaa; font-size: 0.9rem;">🕐 {{ branch.hours }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

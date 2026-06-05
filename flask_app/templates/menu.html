@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Popular Items - SF Food Trucks{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --accent-color: #fded39;
+        --card-bg: rgba(42, 42, 42, 0.6);
+        --text-muted: #aaa;
+    }
+
+    .page-content {
+        padding: 40px 20px;
+        background: radial-gradient(circle at top left, #1a1a1a, #000);
+        min-height: 100vh;
+    }
+
+    .content-card {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 3rem;
+    }
+
+    /* Grid Layout */
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    /* Modern Card Design */
+    .menu-item {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 25px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .menu-item:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-color);
+        box-shadow: 0 10px 30px rgba(253, 237, 57, 0.1);
+    }
+
+    .menu-item h3 {
+        color: white;
+        margin: 0 0 10px 0;
+        font-size: 1.4rem;
+        letter-spacing: 0.5px;
+    }
+
+    .popularity {
+        color: var(--accent-color);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    /* Refined Popularity Bar */
+    .popularity-bar {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin-top: 15px;
+    }
+
+    .popularity-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #fded39, #f7ab05);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(253, 237, 57, 0.5);
+    }
+
+    .error-message {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        color: #ff8791;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="content-card">
+        <h1>Popular Menu Items 🍽️</h1>
+        
+        {% if error %}
+            <div class="error-message">
+                <p><strong>Oops!</strong> {{ data.msg }}</p>
+                {% if data.error %}<p><small>{{ data.error }}</small></p>{% endif %}
+            </div>
+        {% else %}
+            <div class="subtitle">
+                <p>Discover {{ data.total_unique_items }} unique offerings across SF's food truck scene.</p>
+                <p><small>Showing top {{ data.showing }} items</small></p>
+            </div>
+
+            <div class="menu-grid">
+                {% for item in data.menu_list %}
+                <div class="menu-item">
+                    <span class="popularity">🔥 High Demand</span>
+                    <h3>{{ item.name }}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Found at {{ item.trucks }} truck{{ 's' if item.trucks != 1 else '' }}
+                    </p>
+                    
+                    <div class="popularity-bar">
+                        {# Calculate percentage relative to the most popular item #}
+                        {% set max_count = data.menu_list[0].trucks %}
+                        {% set percentage = (item.trucks / max_count) * 100 %}
+                        <div class="popularity-fill" style="width: {{ percentage }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

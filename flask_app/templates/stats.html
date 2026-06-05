@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics - SF Food Trucks{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        border: 2px solid #fded39;
+        border-radius: 15px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(253, 237, 57, 0.3);
+    }
+
+    .stat-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-number {
+        font-size: 3.5rem;
+        color: #fded39;
+        font-weight: bold;
+        margin: 1rem 0;
+    }
+
+    .stat-label {
+        color: #aaa;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    .info-section {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #444;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .error-message {
+        background: #2a2a2a;
+        border: 2px solid #ef4444;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        color: #ef4444;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="content-card">
+        <h1>Application Statistics 📊</h1>
+        <p>Real-time data about SF Food Trucks application.</p>
+
+        {% if error %}
+            <div class="error-message">
+                <h2>⚠️ Error Loading Statistics</h2>
+                <p>{{ data.msg }}</p>
+            </div>
+        {% else %}
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🚚</div>
+                    <div class="stat-number">{{ data.total_trucks }}</div>
+                    <div class="stat-label">Total Trucks</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📍</div>
+                    <div class="stat-number">{{ data.total_locations }}</div>
+                    <div class="stat-label">Total Locations</div>
+                </div>
+
+            </div>
+
+            <div class="info-section">
+                <h3 style="color: #fded39; margin-bottom: 1.5rem;">Database Information</h3>
+
+                <div class="info-row">
+                    <span style="color: #aaa; font-weight: 600;">Unique Vendors:</span>
+                    <span style="color: #fded39; font-weight: 600;">{{ data.total_trucks }}</span>
+                </div>
+
+            </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
