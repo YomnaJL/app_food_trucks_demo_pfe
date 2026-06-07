@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 def load_data_in_es():
-    """ creates an index in elasticsearch """
+    """ creates an index in es"""
     url = "http://data.sfgov.org/resource/rqzj-sfat.json"
     r = requests.get(url)
     data = r.json()
