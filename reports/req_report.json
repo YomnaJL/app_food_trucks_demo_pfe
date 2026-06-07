@@ -1,0 +1,232 @@
+{
+  "summary": {
+    "total_requirements": 28,
+    "testable": 24,
+    "not_testable": 4,
+    "covered": 14,
+    "partial": 9,
+    "missing": 1,
+    "coverage_pct": 58.3
+  },
+  "requirements": {
+    "REQ-Intro": {
+      "description": "Render the 'About' section with 5 paragraphs and specific external links: Docker curriculum (http://prakhar.me/docker-curriculum), Genius (http://genius.com/Justin-bieber-baby-lyrics), and SF Data (https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat).",
+      "status": "COVERED",
+      "test_reference": "Intro.test.js::renders the static informational paragraphs",
+      "missing_aspects": [],
+      "reason": "Tests confirm the About heading, five paragraph texts, and presence of the three links, but do not assert the links' href URLs. [auto-upgraded: all flagged gaps are implementation details]"
+    },
+    "REQ-Sidebar.constructor": {
+      "description": "Initialize Sidebar state with { results: [], query: '', firstLoad: true } and bind onChange, handleSearch, and handleHover methods.",
+      "status": "PARTIAL",
+      "test_reference": "Sidebar.test.js::updates the input value when the user types",
+      "missing_aspects": [
+        "initial state values (results = [], query = '', firstLoad = true) are not asserted"
+      ],
+      "reason": "Tests exercise onChange, handleSearch, and handleHover confirming they are bound, but no test checks the constructor's default state."
+    },
+    "REQ-Sidebar.fetchResults": {
+      "description": "Send a GET request to '/search?q=<query>' using superagent. On success, update state with res.body and set firstLoad to false, then call plotOnMap(). On error, trigger an alert('error in fetching response').",
+      "status": "PARTIAL",
+      "test_reference": "Sidebar.test.js::updates the DOM with results after a successful fetch",
+      "missing_aspects": [
+        "verification that plotOnMap() is called after a successful fetch"
+      ],
+      "reason": "Tests confirm GET request, state update, firstLoad change, and error alert, but do not assert plotOnMap invocation."
+    },
+    "REQ-Sidebar.generateGeoJSON": {
+      "description": "Convert an array of marker objects into a GeoJSON FeatureCollection. Each Feature must include properties { name, hours, address, 'point-color': '253,237,57,1' } and a Point geometry with coordinates built from parseFloat(p.location.longitude) and parseFloat(p.location.latitude).",
+      "status": "COVERED",
+      "test_reference": "Sidebar.test.js::returns a FeatureCollection with correct features for given markers",
+      "missing_aspects": [],
+      "reason": "Tests verify full FeatureCollection output with correct properties, point-color, numeric coordinates, and also handle empty input and coordinate parsing"
+    },
+    "REQ-Sidebar.plotOnMap": {
+      "description": "Flatten all truck branches into a marker array. If a vendor name is provided, split markers into highlightMarkers (matching vendor) and usualMarkers (non-matching); otherwise all markers are usualMarkers. Remove existing 'trucks' and 'trucks-highlight' layers and sources before re-adding. Add a 'trucks' circle layer (yellow rgba(253,237,57,1)). If highlightMarkers exist, add a 'trucks-highlight' circle layer (pink rgba(164,65,99,1)).",
+      "status": "COVERED",
+      "test_reference": "Sidebar.test.js::adds only the usual trucks source/layer when no vendor is provided",
+      "missing_aspects": [],
+      "reason": "Tests verify removal, source/layer addition, splitting logic and highlight layer color, but do not assert the yellow color of the usual trucks layer. [auto-upgraded: all flagged gaps are implementation details]"
+    },
+    "REQ-Sidebar.handleSearch": {
+      "description": "Prevent default form submission and call fetchResults().",
+      "status": "COVERED",
+      "test_reference": "Sidebar.test.js::submits query, fetches results and renders result summary",
+      "missing_aspects": [],
+      "reason": "Tests assert request.get is called and UI updates after form submit, confirming fetchResults runs and default submission is prevented."
+    },
+    "REQ-Sidebar.onChange": {
+      "description": "Update state.query with the current input value from the change event.",
+      "status": "COVERED",
+      "test_reference": "Sidebar.test.js::updates the input value when the user types",
+      "missing_aspects": [],
+      "reason": "Tests assert that the input value reflects the typed value, confirming state.query is updated on change events"
+    },
+    "REQ-Sidebar.handleHover": {
+      "description": "Call plotOnMap(vendorName) to highlight the hovered vendor's locations on the map.",
+      "status": "COVERED",
+      "test_reference": "Sidebar.test.js::delegates to plotOnMap with the supplied vendor name and adds highlight layers",
+      "missing_aspects": [],
+      "reason": "Tests spy on plotOnMap to confirm it is called with the vendor name and verify that highlight sources and layers are added to the map."
+    },
+    "REQ-Sidebar.render.firstLoad": {
+      "description": "When firstLoad is true, render only the search form and the <Intro /> component.",
+      "status": "MISSING",
+      "test_reference": null,
+      "missing_aspects": [],
+      "reason": "No test checks the initial render when firstLoad is true; all tests focus on search submission, result rendering, and map interactions."
+    },
+    "REQ-Sidebar.render.results": {
+      "description": "When firstLoad is false, render the search form and, if resultsCount > 0, a results area showing hit count, location count, and a list of <Vendor> components.",
+      "status": "PARTIAL",
+      "test_reference": "Sidebar.test.js::updates the DOM with results after a successful fetch",
+      "missing_aspects": [
+        "search form not verified to render after firstLoad becomes false",
+        "list of <Vendor> components not verified to be rendered"
+      ],
+      "reason": "Tests confirm result heading and hit/location counts after a successful fetch, but do not assert the presence of the search form or Vendor component list when firstLoad is false."
+    },
+    "REQ-Vendor.constructor": {
+      "description": "Initialize Vendor state with { isExpanded: false } and bind toggleExpand.",
+      "status": "COVERED",
+      "test_reference": "Vendor.test.js::toggles expanded state and updates displayed food items",
+      "missing_aspects": [],
+      "reason": "Tests confirm initial collapsed rendering (isExpanded false) and that clicking expands via bound toggleExpand method"
+    },
+    "REQ-Vendor.formatFoodItems": {
+      "description": "When isExpanded is true, return all food items joined by ', '. When collapsed, join and take the first 80 chars; if that exceeds 70 chars, truncate at the last comma boundary within those 80 chars and append ' & more...'.",
+      "status": "PARTIAL",
+      "test_reference": "Vendor.test.js::returns the full joined string when expanded",
+      "missing_aspects": [
+        "Collapsed truncation does not verify cutting at the last comma boundary when the 80‑char slice exceeds 70 characters and contains commas"
+      ],
+      "reason": "Tests cover expanded full join and basic collapsed truncation, but no test checks comma‑boundary truncation logic"
+    },
+    "REQ-Vendor.toggleExpand": {
+      "description": "Toggle state.isExpanded between true and false on each click, causing formatFoodItems to re-evaluate and update the displayed food item list.",
+      "status": "PARTIAL",
+      "test_reference": "Vendor.test.js::toggles expanded state and updates displayed food items",
+      "missing_aspects": [
+        "Does not verify toggling back to collapsed state on a second click, ensuring state.isExpanded flips back and formatFoodItems re-evaluates"
+      ],
+      "reason": "Test confirms expansion and updated list but lacks verification of the subsequent collapse toggle"
+    },
+    "REQ-Vendor.render": {
+      "description": "Render a <li> with onMouseEnter calling handleHover(name) and onClick calling toggleExpand. Display truck name, branch count with a pin icon, optionally a 'Serves Cold Drinks' row if drinks is true, and the formatted food items with fork/spoon icons.",
+      "status": "PARTIAL",
+      "test_reference": "Vendor.test.js::calls handleHover with the vendor name on mouse enter",
+      "missing_aspects": [
+        "truck name is rendered in the <li>",
+        "branch count with pin icon is displayed",
+        "conditional 'Serves Cold Drinks' row when drinks is true",
+        "fork/spoon icons accompanying formatted food items"
+      ],
+      "reason": "Tests verify handleHover on mouseEnter, toggleExpand on click, and food item formatting, but do not assert rendering of name, branch count, drinks row, or icons."
+    },
+    "REQ-formatHTMLforMarker": {
+      "description": "Build and return an HTML string for a Mapbox popup using props.name, props.hours, and props.address. Renders a '.marker-title' div for the name, an 'Operating Hours' h4 with a span, and an 'Address' h4 with a span.",
+      "status": "COVERED",
+      "test_reference": "app.test.js::should return correctly formatted HTML for typical props",
+      "missing_aspects": [],
+      "reason": "Tests verify correct HTML structure for typical, empty, non‑string, and missing props plus error handling, covering the required output."
+    },
+    "REQ-app.mapboxSetup": {
+      "description": "Initialize a Mapbox GL map centered on San Francisco ([-122.44, 37.77]) at zoom 12, using the specified access token and custom map style.",
+      "status": "NOT_TESTABLE",
+      "test_reference": null,
+      "missing_aspects": [],
+      "reason": "Browser-only: 'app.js' is a browser entry-point and description matches pattern 'access token'. Top-level code executes on require() and crashes in Node.js. Use Cypress or Playwright for E2E coverage."
+    },
+    "REQ-app.mapClickTrucks": {
+      "description": "On map click, query features on the 'trucks' layer within radius 10. If a feature is found, display a Mapbox popup at the feature's coordinates with HTML from formatHTMLforMarker.",
+      "status": "NOT_TESTABLE",
+      "test_reference": null,
+      "missing_aspects": [],
+      "reason": "Browser-only: type='event-handler' in entry-point 'app.js'. Not inside an exported function — executes on require(). Use Cypress or Playwright for E2E coverage."
+    },
+    "REQ-app.mapClickTrucksHighlight": {
+      "description": "On map click, query features on the 'trucks-highlight' layer within radius 10. If a feature is found, display a Mapbox popup at the feature's coordinates with HTML from formatHTMLforMarker.",
+      "status": "NOT_TESTABLE",
+      "test_reference": null,
+      "missing_aspects": [],
+      "reason": "Browser-only: type='event-handler' in entry-point 'app.js'. Not inside an exported function — executes on require(). Use Cypress or Playwright for E2E coverage."
+    },
+    "REQ-app.renderSidebar": {
+      "description": "Mount the <Sidebar map={map} /> React component into the DOM element with id 'sidebar'.",
+      "status": "NOT_TESTABLE",
+      "test_reference": null,
+      "missing_aspects": [],
+      "reason": "Browser-only: type='initialization' in entry-point 'app.js'. Not inside an exported function — executes on require(). Use Cypress or Playwright for E2E coverage."
+    },
+    "REQ-backend.loadDataInEs": {
+      "description": "Fetch food truck data from the SF Gov API (http://data.sfgov.org/resource/rqzj-sfat.json) and index each truck into Elasticsearch under index 'sfdata', doc_type 'truck', using the array index as the document ID.",
+      "status": "PARTIAL",
+      "test_reference": "test_app.py::test_load_data_in_es_nonempty",
+      "missing_aspects": [
+        "no assertion that requests.get is called with the required SF Gov API URL"
+      ],
+      "reason": "tests confirm indexing of each truck and printed output, but do not verify the fetch URL"
+    },
+    "REQ-backend.safeCheckIndex": {
+      "description": "Check if an Elasticsearch index exists with exponential backoff retry (up to max_retry=6 attempts, sleep 2^retry seconds). Exit the process if max retries are exceeded.",
+      "status": "PARTIAL",
+      "test_reference": "test_app.py::test_safe_check_index_happy_path_returns_exists",
+      "missing_aspects": [
+        "exponential backoff sleep (2^retry seconds) between retry attempts",
+        "verification that retries are performed up to max_retry before succeeding"
+      ],
+      "reason": "Tests verify successful index check and exit on max retries, but do not test the backoff sleep or intermediate retry behavior."
+    },
+    "REQ-backend.formatFooditems": {
+      "description": "Split a food items string on ':' and strip/lowercase each part. If the first element contains 'cold truck', drop it and return the rest; otherwise return all parts.",
+      "status": "PARTIAL",
+      "test_reference": "test_app.py::test_format_fooditems_basic_split",
+      "missing_aspects": [
+        "lowercasing of non‑first parts"
+      ],
+      "reason": "Tests cover splitting, stripping, and cold‑truck detection, but none verify that parts beyond the first are lowercased."
+    },
+    "REQ-backend.searchEndpoint": {
+      "description": "GET /search?q=<key>: Query Elasticsearch for trucks whose 'fooditems' field matches the key. Return JSON with trucks (name, fooditems, branches with hours/schedule/address/location.coordinates, drinks flag), hit count, and location count. Return 400 if no query provided, 500 on ES error.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_search_success",
+      "missing_aspects": [],
+      "reason": "tests verify missing query handling, ES error handling, and successful response with correct status, hit/location counts, and all required truck and branch fields"
+    },
+    "REQ-backend.menuEndpoint": {
+      "description": "GET /menu: Retrieve all food items from Elasticsearch, count occurrences of each item, return the top 20 by frequency. Supports ?format=json for JSON response or renders menu.html template.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_menu_success_json",
+      "missing_aspects": [],
+      "reason": "tests verify successful JSON response with correct item counts and error handling, covering retrieval, counting, top‑20 logic (not needed) and JSON format support"
+    },
+    "REQ-backend.statsEndpoint": {
+      "description": "GET /stats: Return unique truck count and total locations using Elasticsearch cardinality and value_count aggregations. Supports ?format=json for JSON response or renders stats.html template.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_stats_success_json",
+      "missing_aspects": [],
+      "reason": "Tests cover JSON success and error responses but do not verify the HTML template rendering branch. [auto-upgraded: all flagged gaps are implementation details]"
+    },
+    "REQ-backend.healthEndpoint": {
+      "description": "GET /health: Return 200 JSON with elasticsearch: 'connected' if ES cluster is reachable, or 503 JSON with elasticsearch: 'disconnected' otherwise.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_health_success",
+      "missing_aspects": [],
+      "reason": "tests verify 200 with elasticsearch='connected' and 503 with elasticsearch='disconnected' covering both success and failure cases"
+    },
+    "REQ-backend.randomEndpoint": {
+      "description": "GET /random: Fetch one random truck from Elasticsearch using function_score with random_score. Return truck name, fooditems, address, location, hours, and schedule. Supports ?format=json or renders random.html.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_random_truck_success_json",
+      "missing_aspects": [],
+      "reason": "Tests cover JSON response fields and error cases but do not verify the HTML rendering branch. [auto-upgraded: all flagged gaps are implementation details]"
+    },
+    "REQ-backend.filterEndpoint": {
+      "description": "GET /filter?cuisine=<cuisine>: Query Elasticsearch for trucks matching the cuisine in fooditems. Return grouped truck list with branches. Return 400 if no cuisine provided, 500 on ES error. Supports ?format=json or renders filter.html.",
+      "status": "COVERED",
+      "test_reference": "test_app.py::test_filter_trucks_success",
+      "missing_aspects": [],
+      "reason": "Tests verify JSON success response, 400 missing cuisine, and 500 ES error handling, but do not test the HTML rendering path. [auto-upgraded: all flagged gaps are implementation details]"
+    }
+  }
+}

@@ -1,0 +1,415 @@
+{
+  "thresholds": {
+    "min_function_coverage": 90.0,
+    "min_file_coverage": 80.0,
+    "fail_under": 70.0,
+    "excluded_functions": []
+  },
+  "files": [
+    {
+      "filename": "app.py",
+      "overall_score": 0.928,
+      "total_gaps": 11,
+      "critical_gaps": 0,
+      "ai_critique": "### `load_data_in_es`, `safe_check_index`, `format_fooditems`\n**[MEDIUM]** `format_fooditems` — Missing edge‑case when prefix is absent  \n> Why this TEST is weak or missing (1-2 sentences max).  \n> → **Fix:** `def test_format_fooditems_returns_all_items_when_no_cold_prefix(monkeypatch):`\n\n\n**[MEDIUM]** `safe_check_index` — Exponential backoff delay not verified  \n> Why this TEST is weak or missing (1-2 sentences max).  \n> → **Fix:** `def test_safe_check_index_backoff_delay(monkeypatch):`\n\n\n*🧑‍⚖️ Judge: 3 issue(s) rejected.*\n\n### `check_and_load_index`, `index`, `test_es`\n**[MEDIUM]** `test_es` — Overly broad exception handling hides specific failure modes  \n> A generic `except:` swallows any exception without distinguishing network errors from parsing errors, preventing the test suite from confirming that genuine connectivity problems are properly handled.  \n> → **Fix:** `def test_es_handles_connection_error(...):`  \n\n\n**[MEDIUM]** `index` — Response status and content type are never checked  \n> The test merely calls `index()` and discards the result, so a regression that returns an error page or wrong status code would not be caught.  \n> → **Fix:** `def test_index_returns_200_and_correct_template(...):`  \n\n\n*🧑‍⚖️ Judge: 2 issue(s) rejected.*\n\n### `search`, `about`, `menu`\n[CRITICAL] `search` — Missing test for Elasticsearch exception handling  \n> The function catches generic exceptions and returns a 500 JSON error, but no test verifies this path.  \n> → **Fix:** `def test_search_returns_failure_when_es_raises():`  \n\n[HIGH] `search` — No test for empty query validation response  \n> Current code returns 400 with “Please provide a query” when key is missing, but tests do not assert status code or response body.  \n> → **Fix:** `def test_search_returns_400_and_message_when_query_is_none():`  \n\n[MEDIUM] `menu` — Absent test for JSON format output with empty results  \n> When `format=json` is passed and no food items are found, the function should return a JSON structure with an empty `menu_list`; no test checks this.  \n> → **Fix:** `def test_menu_json_returns_empty_list_when_no_food_items():`  \n\n[MEDIUM] `menu` — Lack of test for sorting correctness of top foods  \n> The menu function sorts items by count descending and limits to 20; tests do not verify ordering.  \n> → **Fix:** `def test_menu_sorts_food_items_by_count_descending():`  \n\n[LOW] `about` — No assertion on template rendering  \n> The about endpoint renders ‘about.html’ but tests do not confirm the correct template is used or that the response status is 200.  \n> → **Fix:** `def test_about_renders_about_template():`  \n\n\n### `health`, `stats`, `random_truck`\n**[HIGH]** `stats` — Missing test for HTML error rendering and status code  \n> The non‑JSON path returns an HTML template with `error=True`; tests should assert the 500 status and the presence of the error flag.  \n> → **Fix:** `def test_stats_html_error_returns_500_and_error_flag():`\n\n\n**[MEDIUM]** `stats` — Missing assertion for non‑JSON error response body  \n> The error response for HTML format uses a different template; a test should confirm that the rendered HTML contains the expected error message.  \n> → **Fix:** `def test_stats_html_error_contains_expected_message():`\n\n\n*🧑‍⚖️ Judge: 3 issue(s) rejected.*\n\n### `filter_trucks`\n**[HIGH]** `filter_trucks` — No test confirming that a missing `cuisine` parameter triggers a 400 response with the expected error message for JSON format.  \n> → **Fix:** `def test_filter_trucks_missing_cuisine_json_error(...):`\n\n\n**[LOW]** `filter_trucks` — No test that asserts the `count` field in the response matches the actual number of trucks returned for the given cuisine.  \n> → **Fix:** `def test_filter_trucks_count_field_consistency(...):`\n\n\n*🧑‍⚖️ Judge: 3 issue(s) rejected.*\n\n**Top fix (global):** Add comprehensive failure‑scenario tests for every Elasticsearch‑dependent endpoint that mock ES errors and assert the exact HTTP status codes and JSON (or HTML) error structures returned.",
+      "functions": [
+        {
+          "name": "load_data_in_es",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 20.95,
+          "gaps": []
+        },
+        {
+          "name": "safe_check_index",
+          "quality_score": 0.682,
+          "coverage_percent": 63.6,
+          "coverage_available": true,
+          "complexity": 3,
+          "missing_lines": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "llm_generation_time_s": 116.84,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [32, 33, 34, 35] inside `safe_check_index` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [32, 33, 34, 35]. Check which branch guards those lines.",
+              "line": 32
+            },
+            {
+              "severity": "high",
+              "type": "missing_branch",
+              "description": "Branch `except` (`exceptions.ConnectionError`) at line 32 is never exercised.",
+              "suggestion": "Add a test that makes execution reach the `except` path at line 32.",
+              "line": 32
+            },
+            {
+              "severity": "medium",
+              "type": "missing_edge_case",
+              "description": "No edge-case tests found for `safe_check_index` (None, empty, zero, negative, boundary values).",
+              "suggestion": "Add tests with: None arguments, empty strings/lists/dicts, zero, negative numbers, very large numbers.",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "format_fooditems",
+          "quality_score": 0.912,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 5.77,
+          "gaps": [
+            {
+              "severity": "medium",
+              "type": "missing_edge_case",
+              "description": "No edge-case tests found for `format_fooditems` (None, empty, zero, negative, boundary values).",
+              "suggestion": "Add tests with: None arguments, empty strings/lists/dicts, zero, negative numbers, very large numbers.",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "check_and_load_index",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 14.739999999999998,
+          "gaps": []
+        },
+        {
+          "name": "index",
+          "quality_score": 0.9,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 3.99,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "missing_mock",
+              "description": "`index` calls `flask` but no mock found — tests will crash without a live server.",
+              "suggestion": "Use @patch to isolate: @patch('module.flask')",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "test_es",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 5.64,
+          "gaps": []
+        },
+        {
+          "name": "search",
+          "quality_score": 0.99,
+          "coverage_percent": 96.6,
+          "coverage_available": true,
+          "complexity": 14,
+          "missing_lines": [
+            103
+          ],
+          "llm_generation_time_s": 30.810000000000002,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [103] inside `search` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [103]. Check which branch guards those lines.",
+              "line": 103
+            }
+          ]
+        },
+        {
+          "name": "about",
+          "quality_score": 0.775,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 2.63,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "missing_mock",
+              "description": "`about` calls `flask` but no mock found — tests will crash without a live server.",
+              "suggestion": "Use @patch to isolate: @patch('module.flask')",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "menu",
+          "quality_score": 0.977,
+          "coverage_percent": 92.3,
+          "coverage_available": true,
+          "complexity": 11,
+          "missing_lines": [
+            199,
+            212
+          ],
+          "llm_generation_time_s": 8.27,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [199, 212] inside `menu` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [199, 212]. Check which branch guards those lines.",
+              "line": 199
+            }
+          ]
+        },
+        {
+          "name": "health",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 13.71,
+          "gaps": []
+        },
+        {
+          "name": "stats",
+          "quality_score": 0.943,
+          "coverage_percent": 85.7,
+          "coverage_available": true,
+          "complexity": 4,
+          "missing_lines": [
+            271,
+            282
+          ],
+          "llm_generation_time_s": 4.23,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [271, 282] inside `stats` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [271, 282]. Check which branch guards those lines.",
+              "line": 271
+            }
+          ]
+        },
+        {
+          "name": "random_truck",
+          "quality_score": 0.933,
+          "coverage_percent": 83.3,
+          "coverage_available": true,
+          "complexity": 6,
+          "missing_lines": [
+            310,
+            329,
+            340
+          ],
+          "llm_generation_time_s": 15.35,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [310, 329, 340] inside `random_truck` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [310, 329, 340]. Check which branch guards those lines.",
+              "line": 310
+            }
+          ]
+        },
+        {
+          "name": "filter_trucks",
+          "quality_score": 0.953,
+          "coverage_percent": 90.0,
+          "coverage_available": true,
+          "complexity": 12,
+          "missing_lines": [
+            356,
+            400,
+            411
+          ],
+          "llm_generation_time_s": 21.18,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "incomplete_coverage",
+              "description": "Lines [356, 400, 411] inside `filter_trucks` are NEVER executed by the test suite.",
+              "suggestion": "Add test cases that trigger lines [356, 400, 411]. Check which branch guards those lines.",
+              "line": 356
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "static/src/app.js",
+      "overall_score": 1.0,
+      "total_gaps": 0,
+      "critical_gaps": 0,
+      "ai_critique": "### `formatHTMLforMarker`\n**[CRITICAL]** `formatHTMLforMarker` — Unescaped HTML may cause XSS  \n> If `name`, `hours`, or `address` contain `<script>` or other tags, they are emitted verbatim, enabling client‑side script execution.  \n> → **Fix:** Escape or sanitize those values before concatenation; add a test that checks escaped output, e.g. `it('escapes <script> in address', async () => {...});`\n\n\n**[HIGH]** `formatHTMLforMarker` — No validation for non‑object props  \n> Passing `null`, `undefined`, or a primitive triggers a TypeError during destructuring, breaking callers.  \n> → **Fix:** Guard against non‑object input and return a sensible default or error; unit test that case, e.g. `it('throws when props is not an object', async () => {...});`\n\n\n**[LOW]** `formatHTMLforMarker` — Missing tests for empty string values  \n> When `hours` or `address` are empty strings, the rendered markup contains empty `<span>` tags, which can cause layout issues.  \n> → **Fix:** Add tests for empty strings to ensure correct placeholder or default behavior, e.g. `it('renders empty hours without breaking layout', async () => {...});`\n\n\n**[MEDIUM]** `formatHTMLforMarker` — Inline concatenation couples logic to HTML structure  \n> The current string‑building makes future changes error‑prone; extracting a helper for the title markup improves readability.  \n> → **Fix:** Refactor to a small pure helper and test its output, e.g. `it('helper returns correct title markup', async () => {...});`\n\n\n*🧑‍⚖️ Judge: 1 issue(s) rejected, 1 severity(ies) downgraded.*\n**Top fix:** Escape user‑provided values before inserting them into the HTML string to prevent XSS.",
+      "functions": [
+        {
+          "name": "formatHTMLforMarker",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 12.05,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "filename": "static/src/components/Intro.js",
+      "overall_score": 0.962,
+      "total_gaps": 0,
+      "critical_gaps": 0,
+      "ai_critique": "### `Intro`\n**[MEDIUM]** `Intro` — Missing assertions for required external links  \n> The component must render Docker curriculum, Genius, and SF Data links with correct hrefs.  \n> → **Fix:** assert that `screen.getByHref(/docker curriculum/)` etc.\n\n\n*🧑‍⚖️ Judge: 2 issue(s) rejected.*\n**Top fix:** Add a snapshot test to lock in the component’s exact markup.",
+      "functions": [
+        {
+          "name": "Intro",
+          "quality_score": 0.962,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 18.75,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "filename": "static/src/components/Sidebar.js",
+      "overall_score": 0.966,
+      "total_gaps": 3,
+      "critical_gaps": 0,
+      "ai_critique": "### `Sidebar.fetchResults`, `Sidebar.generateGeoJSON`, `Sidebar.plotOnMap`\n**[MEDIUM]** `Sidebar.fetchResults` — Missing rejection handling test  \n> Why: The `end` callback runs without asserting that `request.get` rejected, so failures go unnoticed.  \n> → **Fix:** `it('should alert on fetch error', async () => {...});`\n\n\n**[HIGH]** `Sidebar.fetchResults` — Request mock not cleared causing cross‑test state leakage  \n> Why: Mocked `request.get` persists across tests, leading to false `setState` calls in subsequent tests.  \n> → **Fix:** `it('should clear mock after each test', async () => {...});`\n\n\n**[MEDIUM]** `Sidebar.generateGeoJSON` — No validation for missing location property causing NaN coordinates  \n> Why: `parseFloat(undefined)` yields NaN, breaking the GeoJSON geometry output.  \n> → **Fix:** `it('returns empty collection when location missing', () => {...});`\n\n\n**[MEDIUM]** `Sidebar.generateGeoJSON` — Empty markers array not tested, should still produce a valid FeatureCollection  \n> Why: Edge case of empty input can produce an empty features array, but no test verifies correct output.  \n> → **Fix:** `it('returns valid FeatureCollection for empty markers', () => {...});`\n\n\n**[HIGH]** `Sidebar.plotOnMap` — Highlight source creation not asserted when no vendor supplied, possible stray layer  \n> Why: When `highlightMarkers` is falsy, the highlight source should be omitted, but no test checks that no extra layer is added.  \n> → **Fix:** `it('does not add highlight source when no vendor', () => {...});`\n\n\n*🧑‍⚖️ Judge: 1 severity(ies) downgraded.*\n\n### `Sidebar.handleSearch`, `Sidebar.onChange`, `Sidebar.handleHover`\n**[MEDIUM]** `Sidebar.onChange` — does not test handling of empty or non‑string `e.target.value` inputs  \n> Empty strings could cause downstream logic errors when query is processed elsewhere  \n> → **Fix:** add a test for `e.target.value === ''` case  \n\n\n**[HIGH]** `Sidebar.handleHover` — missing `jest.clearAllMocks` ensuring side‑effects leak between tests  \n> Leftover mock state can cause flaky test runs in CI  \n> → **Fix:** include `afterEach(() => jest.clearAllMocks())` in the test suite  \n\n\n*🧑‍⚖️ Judge: 2 issue(s) rejected.*\n\n**Top fix (global):** Add an `afterEach` hook that clears all Jest mocks and restores the `request.get` mock (e.g., `jest.clearAllMocks(); jest.restoreAllMocks();`) to eliminate cross‑test state leakage.",
+      "functions": [
+        {
+          "name": "Sidebar.fetchResults",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 55.04,
+          "gaps": []
+        },
+        {
+          "name": "Sidebar.generateGeoJSON",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 13.57,
+          "gaps": []
+        },
+        {
+          "name": "Sidebar.plotOnMap",
+          "quality_score": 0.975,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 8,
+          "missing_lines": [],
+          "llm_generation_time_s": 18.62,
+          "gaps": [
+            {
+              "severity": "high",
+              "type": "missing_branch",
+              "description": "`Sidebar.plotOnMap` guards cleanup calls with existence checks but tests do not cover both the 'resource exists' and 'absent' branches.",
+              "suggestion": "Add two test variants: one where the mock returns an existing value (so removeLayer/removeSource is called) and one where it returns null. Example: mockMap.getLayer.mockReturnValue('layer') vs mockReturnValue(null).",
+              "line": null
+            },
+            {
+              "severity": "medium",
+              "type": "missing_edge_case",
+              "description": "`Sidebar.plotOnMap` uses .filter() but no test covers the case where the filter matches nothing (empty result). In JS, an empty array [] is truthy, so conditional logic after filter([]) may produce unexpected behaviour.",
+              "suggestion": "Add a test where the filter input matches no item. Assert the filtered result has length 0.",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "Sidebar.handleSearch",
+          "quality_score": 0.975,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 26.6,
+          "gaps": []
+        },
+        {
+          "name": "Sidebar.onChange",
+          "quality_score": 0.895,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 3,
+          "missing_lines": [],
+          "llm_generation_time_s": 4.85,
+          "gaps": [
+            {
+              "severity": "medium",
+              "type": "missing_edge_case",
+              "description": "No edge cases for `Sidebar.onChange` (null, [], empty string).",
+              "suggestion": "Add: Sidebar.onChange(null), Sidebar.onChange([]), Sidebar.onChange(0)",
+              "line": null
+            }
+          ]
+        },
+        {
+          "name": "Sidebar.handleHover",
+          "quality_score": 0.954,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 1,
+          "missing_lines": [],
+          "llm_generation_time_s": 20.53,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "filename": "static/src/components/Vendor.js",
+      "overall_score": 0.97,
+      "total_gaps": 0,
+      "critical_gaps": 0,
+      "ai_critique": "### `Vendor.formatFoodItems`, `Vendor.toggleExpand`\n**[MEDIUM]** `Vendor.formatFoodItems` — Incorrect handling of 70‑character boundary  \n> The logic adds “ & more…” only when length > 70, so exactly 70 characters must not receive the suffix; this edge case is untested.  \n> → **Fix:** a test expecting no suffix when summary length is 70.\n\n\n**[HIGH]** `Vendor.toggleExpand` — Untested state flip in toggleExpand  \n> The method flips `isExpanded` but tests never verify that `setState` receives the inverted boolean or that the component’s state updates correctly, leaving regressions unchecked.  \n> → **Fix:** a test that mocks `setState` and checks it was called with `!prevState`.\n\n**Top fix:** Add a test verifying that `Vendor.toggleExpand` correctly flips and validates the new state.\n\n*🧑‍⚖️ Judge: 2 issue(s) rejected.*",
+      "functions": [
+        {
+          "name": "Vendor.formatFoodItems",
+          "quality_score": 1.0,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 3,
+          "missing_lines": [],
+          "llm_generation_time_s": 14.94,
+          "gaps": []
+        },
+        {
+          "name": "Vendor.toggleExpand",
+          "quality_score": 0.94,
+          "coverage_percent": 100.0,
+          "coverage_available": true,
+          "complexity": 2,
+          "missing_lines": [],
+          "llm_generation_time_s": 62.300000000000004,
+          "gaps": []
+        }
+      ]
+    }
+  ]
+}

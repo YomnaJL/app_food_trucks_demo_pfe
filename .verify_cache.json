@@ -1,0 +1,169 @@
+{
+  "7c953e2e25c6390d934d83518be68025": {
+    "status": "COVERED",
+    "test_reference": "Sidebar.test.js::returns a FeatureCollection with correct features for given markers",
+    "missing_aspects": [],
+    "reason": "Tests verify full FeatureCollection output with correct properties, point-color, numeric coordinates, and also handle empty input and coordinate parsing"
+  },
+  "883bbc462311070a505d5a3327a80a9f": {
+    "status": "PARTIAL",
+    "test_reference": "Sidebar.test.js::updates the DOM with results after a successful fetch",
+    "missing_aspects": [
+      "verification that plotOnMap() is called after a successful fetch"
+    ],
+    "reason": "Tests confirm GET request, state update, firstLoad change, and error alert, but do not assert plotOnMap invocation."
+  },
+  "0997dcc7b300c6aeb3c77b75c66b13ec": {
+    "status": "COVERED",
+    "test_reference": "Intro.test.js::renders the static informational paragraphs",
+    "missing_aspects": [],
+    "reason": "Tests confirm the About heading, five paragraph texts, and presence of the three links, but do not assert the links' href URLs. [auto-upgraded: all flagged gaps are implementation details]"
+  },
+  "d06ea954035d277e2c7bab6ff30bb8d2": {
+    "status": "PARTIAL",
+    "test_reference": "Sidebar.test.js::updates the input value when the user types",
+    "missing_aspects": [
+      "initial state values (results = [], query = '', firstLoad = true) are not asserted"
+    ],
+    "reason": "Tests exercise onChange, handleSearch, and handleHover confirming they are bound, but no test checks the constructor's default state."
+  },
+  "64a80bde5b722fd84a38e48bd1e8fb3e": {
+    "status": "COVERED",
+    "test_reference": "Sidebar.test.js::updates the input value when the user types",
+    "missing_aspects": [],
+    "reason": "Tests assert that the input value reflects the typed value, confirming state.query is updated on change events"
+  },
+  "2fefdbad47a4c961f428d8105fbf81d4": {
+    "status": "COVERED",
+    "test_reference": "Sidebar.test.js::submits query, fetches results and renders result summary",
+    "missing_aspects": [],
+    "reason": "Tests assert request.get is called and UI updates after form submit, confirming fetchResults runs and default submission is prevented."
+  },
+  "b5d037f5b98ac49b71c4941eb130cbd5": {
+    "status": "COVERED",
+    "test_reference": "Sidebar.test.js::delegates to plotOnMap with the supplied vendor name and adds highlight layers",
+    "missing_aspects": [],
+    "reason": "Tests spy on plotOnMap to confirm it is called with the vendor name and verify that highlight sources and layers are added to the map."
+  },
+  "d5f87cde97e4566e9df468019d6f90b4": {
+    "status": "MISSING",
+    "test_reference": null,
+    "missing_aspects": [],
+    "reason": "No test checks the initial render when firstLoad is true; all tests focus on search submission, result rendering, and map interactions."
+  },
+  "9dd3ea10f67b0b4dd0f5a88300af8a02": {
+    "status": "COVERED",
+    "test_reference": "Vendor.test.js::toggles expanded state and updates displayed food items",
+    "missing_aspects": [],
+    "reason": "Tests confirm initial collapsed rendering (isExpanded false) and that clicking expands via bound toggleExpand method"
+  },
+  "00ba8f91734af93ed8e6b2765d6c8200": {
+    "status": "COVERED",
+    "test_reference": "Sidebar.test.js::adds only the usual trucks source/layer when no vendor is provided",
+    "missing_aspects": [],
+    "reason": "Tests verify removal, source/layer addition, splitting logic and highlight layer color, but do not assert the yellow color of the usual trucks layer. [auto-upgraded: all flagged gaps are implementation details]"
+  },
+  "f03e8ea601723cf3c31fe12ab6e40554": {
+    "status": "PARTIAL",
+    "test_reference": "Sidebar.test.js::updates the DOM with results after a successful fetch",
+    "missing_aspects": [
+      "search form not verified to render after firstLoad becomes false",
+      "list of <Vendor> components not verified to be rendered"
+    ],
+    "reason": "Tests confirm result heading and hit/location counts after a successful fetch, but do not assert the presence of the search form or Vendor component list when firstLoad is false."
+  },
+  "1c1003d04c67d18e6f5faa372d048466": {
+    "status": "PARTIAL",
+    "test_reference": "Vendor.test.js::toggles expanded state and updates displayed food items",
+    "missing_aspects": [
+      "Does not verify toggling back to collapsed state on a second click, ensuring state.isExpanded flips back and formatFoodItems re-evaluates"
+    ],
+    "reason": "Test confirms expansion and updated list but lacks verification of the subsequent collapse toggle"
+  },
+  "d840ea8e5d9c440a1da55cbbd3894e9b": {
+    "status": "PARTIAL",
+    "test_reference": "Vendor.test.js::returns the full joined string when expanded",
+    "missing_aspects": [
+      "Collapsed truncation does not verify cutting at the last comma boundary when the 80‑char slice exceeds 70 characters and contains commas"
+    ],
+    "reason": "Tests cover expanded full join and basic collapsed truncation, but no test checks comma‑boundary truncation logic"
+  },
+  "648a73efaaaefed705bd6799b178b11a": {
+    "status": "COVERED",
+    "test_reference": "app.test.js::should return correctly formatted HTML for typical props",
+    "missing_aspects": [],
+    "reason": "Tests verify correct HTML structure for typical, empty, non‑string, and missing props plus error handling, covering the required output."
+  },
+  "fae6436cfa06e893f125b65c47616d3e": {
+    "status": "PARTIAL",
+    "test_reference": "Vendor.test.js::calls handleHover with the vendor name on mouse enter",
+    "missing_aspects": [
+      "truck name is rendered in the <li>",
+      "branch count with pin icon is displayed",
+      "conditional 'Serves Cold Drinks' row when drinks is true",
+      "fork/spoon icons accompanying formatted food items"
+    ],
+    "reason": "Tests verify handleHover on mouseEnter, toggleExpand on click, and food item formatting, but do not assert rendering of name, branch count, drinks row, or icons."
+  },
+  "d3741b64dafcfdcc252605ddd8e39fbc": {
+    "status": "PARTIAL",
+    "test_reference": "test_app.py::test_safe_check_index_happy_path_returns_exists",
+    "missing_aspects": [
+      "exponential backoff sleep (2^retry seconds) between retry attempts",
+      "verification that retries are performed up to max_retry before succeeding"
+    ],
+    "reason": "Tests verify successful index check and exit on max retries, but do not test the backoff sleep or intermediate retry behavior."
+  },
+  "4663d41e54c4239965cbd1689806a513": {
+    "status": "PARTIAL",
+    "test_reference": "test_app.py::test_load_data_in_es_nonempty",
+    "missing_aspects": [
+      "no assertion that requests.get is called with the required SF Gov API URL"
+    ],
+    "reason": "tests confirm indexing of each truck and printed output, but do not verify the fetch URL"
+  },
+  "b24fdce656629d68cc0dc2a910c05e88": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_menu_success_json",
+    "missing_aspects": [],
+    "reason": "tests verify successful JSON response with correct item counts and error handling, covering retrieval, counting, top‑20 logic (not needed) and JSON format support"
+  },
+  "8868bbe80ee47e3d7c8c908fd789b80f": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_search_success",
+    "missing_aspects": [],
+    "reason": "tests verify missing query handling, ES error handling, and successful response with correct status, hit/location counts, and all required truck and branch fields"
+  },
+  "a83f811ef2f52f2add37ef597db15cdf": {
+    "status": "PARTIAL",
+    "test_reference": "test_app.py::test_format_fooditems_basic_split",
+    "missing_aspects": [
+      "lowercasing of non‑first parts"
+    ],
+    "reason": "Tests cover splitting, stripping, and cold‑truck detection, but none verify that parts beyond the first are lowercased."
+  },
+  "04f03a99d39b700e436ec1baf993cc70": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_stats_success_json",
+    "missing_aspects": [],
+    "reason": "Tests cover JSON success and error responses but do not verify the HTML template rendering branch. [auto-upgraded: all flagged gaps are implementation details]"
+  },
+  "15a5c51680609a017d728e8d4b64ee1c": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_health_success",
+    "missing_aspects": [],
+    "reason": "tests verify 200 with elasticsearch='connected' and 503 with elasticsearch='disconnected' covering both success and failure cases"
+  },
+  "974245926d21de52f4e2d5625cbbd609": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_random_truck_success_json",
+    "missing_aspects": [],
+    "reason": "Tests cover JSON response fields and error cases but do not verify the HTML rendering branch. [auto-upgraded: all flagged gaps are implementation details]"
+  },
+  "8bca96b46c17e0e67dec7aea5d34fdf1": {
+    "status": "COVERED",
+    "test_reference": "test_app.py::test_filter_trucks_success",
+    "missing_aspects": [],
+    "reason": "Tests verify JSON success response, 400 missing cuisine, and 500 ES error handling, but do not test the HTML rendering path. [auto-upgraded: all flagged gaps are implementation details]"
+  }
+}
