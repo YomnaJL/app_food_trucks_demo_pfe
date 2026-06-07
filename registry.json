@@ -113,5 +113,7 @@
   "static/src/components/Vendor.js:Vendor.toggleExpand:tests": "c7ff7c2f5d1c3899dac478c36852ca7a8197e568357aab3b00439927cac9f7f7",
   "static/src/components/Vendor.js:Vendor.toggleExpand:coverage": 100.0,
   "static/src/components/Vendor.js:Vendor.toggleExpand:passing": true,
-  "static/src/components/Vendor.js:Vendor.toggleExpand:quality_score": 0.0
+  "static/src/components/Vendor.js:Vendor.toggleExpand:quality_score": 0.0,
+  "__git__:last_processed_sha": "8eceaaa79f5d6a6ea86534c912461bea43976dd9",
+  "__git__:repo_path": "/projects/demo_pfe"
 }
