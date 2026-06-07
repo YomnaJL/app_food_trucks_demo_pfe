@@ -18,7 +18,7 @@ def load_data_in_es():
     print("Loading data in elasticsearch ...")
     for id, truck in enumerate(data):
         res = es.index(index="sfdata", doc_type="truck", id=id, body=truck)
-    print("Total trucks loaded: ", len(data))
+    
 
 
 def safe_check_index(index, retry=1, max_retry=6):
