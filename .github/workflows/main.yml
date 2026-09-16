@@ -43,7 +43,7 @@ jobs:
       id: extract_tags
     - name: Build and push
       id: docker_build
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v6
       with:
         push: true
         tags: ${{ steps.extract_tags.outputs.tags }}
